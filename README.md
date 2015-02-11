@@ -6,45 +6,33 @@ No. They aren't. This is the only comprehensive set, guaranteed.
 
 And look at that, it also comes with a python program to run them. Wow.
 
-## Using maker.py
+## Warning
 
-maker.py is a single python script that replaces your entire make process. What? 
-How much are you charging for this? $50? $100? No, its free. You're welcome.
+I ain't gonna be liable if this accidentally deletes your stuff. Specfiically, running this without 
+arguments invokes `clean_cmd` in the python script, which deletes files. It shouldn't be important
+files, but I can't guarantee that. Also, running `python maker.py makefile` generates a new makefile
+for you, overwriting your old one. Be aware. Use git.
 
-Look at the `build_graph` dictionary at the top of maker.py. This defines a graph
-which is your build process. Theres a start point `__start`, then each level has
-dependencies which are met by another level in the graph. Neat, huh?
+## Setup
 
-Make sure the files in the commands in that graph are named correctly. And that
-the commands are what you want.
+1. Copy maker.py and the test/ folder into the root directory of your project.
 
-After that, look at the `clean_command` and make sure that is good.
+2. Open up maker.py
 
-After that...
+3. Make sure the commands specified in `build_graph` are correct. Namely that the files specified are of the correct name. 
 
-`python maker.py build` or `python maker.py clean`
+4. Make sure the clean command is good. Should be the same as a `make clean`
 
-## Using the testing library 
+5. Make sure the `command` variable in `test_parameters` is the same name as your binary (aka the -o in gcc in `build_graph` above)
 
-Copy the `test` folder and its content into the same directory as `maker.py` (which
-should be the same directory as your project, of course).
+## Using
 
-The `command` field of the `testing_params` struct defines what command the test
-runner will run. The `{}` in that string is where the path to the test file will
-be inserted.
+To build your project: `python maker.py build`
 
-Then, just run `python maker.py test`
+To test your project: `python maker.py test`
 
-You'll get colorized output of the 31+ tests currently in this suite. If a test passes,
-you get a green check. If it fails, a red X and the output of the compile command after
-it. 
+To clean your project `python maker.py clean`
 
-Some tests are marked as optional. This would probably be because myself and a few
-friends believe that this should be the way miniscript works, but we haven't
-confirmed it with the professor. These tests will be marked in yellow if you
-fail them.
+To do all three, in that order: `python maker.py`
 
-For convenience, running `python maker.py` with no arguments will do all three steps.
-Build, test, and then clean. 
-
-Enjoy!
+To generate a makefile based upon the buildgraph and clean command specified in maker.py: `python maker.py makefile`
