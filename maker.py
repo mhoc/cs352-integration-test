@@ -279,7 +279,7 @@ def print_usage():
     print "\tbuild    : builds the project as defined in the build_graph"
     print "\tclean    : cleans the folder as defined in clean_cmd"
     print "\ttest     : tests the project as defined in testing_parameters and test/ folder"
-    print "\tmakefile : "
+    print "\tmakefile : generates a makefile based on the build_graph inside the file Makefile"
     
 
 # Check arguments
