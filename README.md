@@ -1,17 +1,17 @@
 # cs352-test-cases
 
-A completely comprehensive set of test cases for the 252 compiler.
-You're looking at other sets of test cases and thinking "these are comprehensive".
-No. They aren't. This is the only comprehensive set, guaranteed.
-
-And look at that, it also comes with a python program to run them. Wow.
+Test cases and a test case runner for the 352 compiler project.
 
 ## Warning
 
-I ain't gonna be liable if this accidentally deletes your stuff. Specfiically, running this without 
+I won't be liable if this accidentally deletes your stuff. Specfiically, running this without 
 arguments invokes `clean_cmd` in the python script, which deletes files. It shouldn't be important
 files, but I can't guarantee that. Also, running `python maker.py makefile` generates a new makefile
 for you, overwriting your old one. Be aware. Use git.
+
+## Complaints About Test Cases?
+
+Open an issue or submit a pull request. I seriously appreciate any contributions anyone wants to make.
 
 ## Setup
 
