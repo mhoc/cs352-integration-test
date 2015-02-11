@@ -29,6 +29,10 @@ After that...
 Copy the `test` folder and its content into the same directory as `maker.py` (which
 should be the same directory as your project, of course).
 
+The `command` field of the `testing_params` struct defines what command the test
+runner will run. The `{}` in that string is where the path to the test file will
+be inserted.
+
 Then, just run `python maker.py test`
 
 You'll get colorized output of the 31+ tests currently in this suite. If a test passes,
