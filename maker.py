@@ -140,6 +140,9 @@ test_parameters = {
         },
         "034_odd-whitespace": {
             "expect_nothing": True
+        },
+        "035_document-write-no-param-list": {
+            "expect_anything": True
         }
 
     }
@@ -288,7 +291,7 @@ def print_usage():
     print "\tbuild    : builds the project as defined in the build_graph"
     print "\tclean    : cleans the folder as defined in clean_cmd"
     print "\ttest     : tests the project as defined in testing_parameters and test/ folder"
-    print "\tmakefile : generates a makefile based on the build_graph inside the file Makefile"
+    print "\tmakefile : "
     
 
 # Check arguments
