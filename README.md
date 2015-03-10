@@ -17,23 +17,14 @@ File an issue on the right, open a pull request, or contact me otherwise.
 As with any go program, ensure you have $GOPATH set properly.
 See [this link](https://golang.org/doc/code.html) for more information.
 
-Once installed, you need to tell the integration test framework where to
-find your parser binary. This is provided through the environment variable
-`MSP_BINARY`.
-
 ### Installing
 
 `go get github.com/mhoc/cs352-integration-test`
 
 ### Running
 
-`MSP_BINARY=~/src/cs352-src/parser && go run github.com/mhoc/cs352-integration-test`
+`go run github.com/mhoc/cs352-integration-test location/to/binary`
 
 Obviously insert the path to your binary. You can add this line to your make
 file if you like. If $GOPATH is set properly then you can run it from anywhere
 on your system and it will work. Go is pretty cool, huh?
-
-You can also add the following to your `.zshrc` to belay the need to set
-that envvar every time you run the program.
-
-`export MSP_BINARY=~/src/cs352-src/parser`
