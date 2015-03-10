@@ -11,6 +11,7 @@ import (
   "os/exec"
   "strings"
   "sync"
+  "text/tabwriter"
   "time"
 )
 
@@ -24,7 +25,12 @@ func (t *TestSuite) ExpectedOutput(file string) string {
   if t.ExpectOutput {
     bd, err := ioutil.ReadFile(file + ".outp")
     check(err)
-    return string(bd)
+    s := string(bd)
+    if len(s) > 0 && s[len(s)-1] == '\n' {
+      return s[:len(s)-1]
+    } else {
+      return s
+    }
   } else {
     return ""
   }
@@ -48,6 +54,7 @@ func (t *TestCase) PrettyName() string {
 var wg sync.WaitGroup
 var results chan *TestCase
 var parserLoc string
+var tabWriter *tabwriter.Writer
 
 /** Checks and panics an error if it is not null */
 func check(e error) {
@@ -68,6 +75,10 @@ func main() {
   _, err := os.Open(parserLoc)
   check(err)
 
+  // We eventually print out the results with a tabwriter
+  tabWriter = new(tabwriter.Writer)
+  tabWriter.Init(os.Stdout, 0, 8, 0, '\t', 0)
+
   // Create the channel which will return the results of each test
   results = make(chan *TestCase)
 
@@ -80,6 +91,9 @@ func main() {
 
   // Block the main thread until we are finished
   wg.Wait()
+
+  // Print out the results
+  tabWriter.Flush()
 }
 
 /** Initializes and starts all of the tests in a given directory */
@@ -116,6 +130,9 @@ func runTest(tc *TestCase) {
   testCaseBody, err := ioutil.ReadFile(tc.Path)
   check(err)
   tc.Content = string(testCaseBody)
+  if len(tc.Content) > 0 && tc.Content[len(tc.Content)-1] == '\n' {
+    tc.Content = tc.Content[:len(tc.Content)-1]
+  }
 
   // Generate an id
   h := md5.New()
@@ -130,6 +147,9 @@ func runTest(tc *TestCase) {
 
   // Store the result
   tc.Output = string(result)
+  if len(tc.Output) > 0 && tc.Output[len(tc.Output)-1] == '\n' {
+    tc.Output = tc.Output[:len(tc.Output)-1]
+  }
 
   results <- tc
 
@@ -151,21 +171,45 @@ func printResults() {
 }
 
 func printSuccess(tc *TestCase) {
-  fmt.Print(" ")
+  fmt.Fprintf(tabWriter, " ")
   printGreen(tc.Id)
-  fmt.Print("\t" + tc.PrettyName() + "\n")
+  fmt.Fprintf(tabWriter, "\t" + tc.PrettyName() + "\t%d us\n", tc.Time / 1000)
 }
 
 func printFailure(tc *TestCase) {
-  fmt.Print(" ")
+  fmt.Fprintf(tabWriter, " ")
   printRed(tc.Id)
-  fmt.Print("\t" + tc.PrettyName() + "\n")
+  fmt.Fprintf(tabWriter, "\t" + tc.PrettyName() + "\n")
+  printFailureHeader("Expected")
+  fmt.Fprintf(tabWriter, tc.Expected + "\n")
+  printFailureHeader("Output")
+  fmt.Fprintf(tabWriter, tc.Output + "\n")
+  printFailureHeader("Test Case")
+  fmt.Fprintf(tabWriter, tc.Content + "\n")
+  printFailureFooter()
+  fmt.Println("\n")
 }
 
 func printRed(s string) {
-  fmt.Print("\033[0;31m" + s + "\033[0;00m")
+  fmt.Fprintf(tabWriter, "\033[0;31m" + s + "\033[0;00m")
 }
 
 func printGreen(s string) {
-  fmt.Print("\033[0;32m" + s + "\033[0;00m")
+  fmt.Fprintf(tabWriter, "\033[0;32m" + s + "\033[0;00m")
+}
+
+func printCyan(s string) {
+  fmt.Fprintf(tabWriter, "\033[1;36m" + s + "\033[0;00m")
+}
+
+func printFailureHeader(s string) {
+  printCyan("==== " + s + " ")
+  for i := 0; i < 30-len(s); i++ {
+    printCyan("=")
+  }
+  fmt.Fprintf(tabWriter, "\n")
+}
+
+func printFailureFooter() {
+  printCyan("====================================\n") // 36
 }
