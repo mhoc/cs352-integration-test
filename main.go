@@ -10,206 +10,190 @@ import (
   "os"
   "os/exec"
   "strings"
-  "sync"
   "text/tabwriter"
   "time"
 )
 
-type TestSuite struct {
-  DirPath string
-  ExpectOutput bool
-}
+const (
+  TEST_FILES = "testfiles/"
+)
 
-/* Returns the expected output of a given file inside the test suite */
-func (t *TestSuite) ExpectedOutput(file string) string {
-  if t.ExpectOutput {
-    bd, err := ioutil.ReadFile(file + ".outp")
-    check(err)
-    s := string(bd)
-    if len(s) > 0 && s[len(s)-1] == '\n' {
-      return s[:len(s)-1]
-    } else {
-      return s
-    }
-  } else {
-    return ""
-  }
-}
+var (
+  TestCases []*TestCase
+  TabWriter *tabwriter.Writer
+  BinaryLocation string
+)
 
 type TestCase struct {
-  Path string
-  Id string
-  Time int64
+  FileName string
+  PrettyName string
   Content string
-  Output string
-  Expected string
-}
-
-func (t *TestCase) PrettyName() string {
-  sp := strings.Split(t.Path, "/")
-  nm := sp[len(sp)-1]
-  return strings.Title(strings.Replace(nm, "-", " ", -1))
-}
-
-var wg sync.WaitGroup
-var results chan *TestCase
-var parserLoc string
-var tabWriter *tabwriter.Writer
-
-/** Checks and panics an error if it is not null */
-func check(e error) {
-  if e != nil {
-    panic(e)
-  }
+  ExpectedOutput string
+  ActualOutput string
+  Id string
+  Passed bool
+  Time int64
 }
 
 func main() {
 
+  // Init the tab writer
+  TabWriter = new(tabwriter.Writer)
+  TabWriter.Init(os.Stdout, 0, 16, 0, '\t', 0)
+
+  // Init the test cases
+  TestCases = make([]*TestCase, 0, 0)
+
   // Get the location of the binary
-  if len(os.Args) != 2 {
-    panic("Must provide location of binary as argument")
+  if (len(os.Args) != 2) {
+    panic("Must provide path to binary")
+  } else {
+    BinaryLocation = os.Args[1]
   }
-  parserLoc = os.Args[1]
 
-  // Open the binary file to ensure it exists
-  _, err := os.Open(parserLoc)
-  check(err)
+  // Open the directory of test cases
+  files, err := ioutil.ReadDir(TEST_FILES)
+  Check(err)
 
-  // We eventually print out the results with a tabwriter
-  tabWriter = new(tabwriter.Writer)
-  tabWriter.Init(os.Stdout, 0, 8, 0, '\t', 0)
-
-  // Create the channel which will return the results of each test
-  results = make(chan *TestCase)
-
-  // Run each of the test suites
-  initTests(&TestSuite{DirPath: "testfiles/syntax-good/", ExpectOutput: false})
-  initTests(&TestSuite{DirPath: "testfiles/syntax-bad/", ExpectOutput: true})
-
-  // Print the results
-  go printResults()
-
-  // Block the main thread until we are finished
-  wg.Wait()
-
-  // Print out the results
-  tabWriter.Flush()
-}
-
-/** Initializes and starts all of the tests in a given directory */
-func initTests(t *TestSuite) {
-
-  // Open the directory
-  files, err := ioutil.ReadDir(t.DirPath)
-  check(err)
-
-  // For each file in the directory
+  // Create a test case for each file
   for _, file := range files {
-
-    name := t.DirPath + file.Name()
-
-    // Ignore the output files if they exist
-    if strings.Contains(name, ".outp") {
+    if strings.Contains(file.Name(), ".outp") {
       continue
     }
-
-    // Create the test param object
-    tp := TestCase{Path: name, Expected: t.ExpectedOutput(name)}
-
-    // Add one to the waitgroup and spin off a test goroutine
-    wg.Add(1)
-    go runTest(&tp)
-
+    filename := TEST_FILES + file.Name()
+    TestCases = append(TestCases, CreateTest(filename))
   }
+
+  // Run and print the test results
+  for _, test := range TestCases {
+    RunTest(test)
+    PrintTestResult(test)
+  }
+
+  TabWriter.Flush()
+
 }
 
-/** Concurrently runs a single test and returns the results through the results channel */
-func runTest(tc *TestCase) {
+func CreateTest(filename string) *TestCase {
 
-  // Get the content of the test case
-  testCaseBody, err := ioutil.ReadFile(tc.Path)
-  check(err)
-  tc.Content = string(testCaseBody)
-  if len(tc.Content) > 0 && tc.Content[len(tc.Content)-1] == '\n' {
-    tc.Content = tc.Content[:len(tc.Content)-1]
+  // Create a pretty name
+  sp := strings.Split(filename, "/")
+  name := sp[len(sp)-1]
+  pretty := strings.Title(strings.Replace(name, "-", " ", -1))
+
+  // Read the content of the test case
+  contentb, err := ioutil.ReadFile(filename)
+  Check(err)
+  content := string(contentb)
+
+  // Read the expected output
+  expectedb, err := ioutil.ReadFile(filename + ".outp")
+  expected := ""
+  if err == nil {
+    expected = string(expectedb)
   }
+
+  // Remove trailing newlines from the expected output
+  content = StripEndNewline(content)
+  //expected = StripEndNewline(expected)
 
   // Generate an id
-  h := md5.New()
-  io.WriteString(h, tc.Content)
-  tc.Id = hex.EncodeToString(h.Sum(nil))[:4]
+  md5h := md5.New()
+  io.WriteString(md5h, content)
+  id := hex.EncodeToString(md5h.Sum(nil))[:4]
 
-  // Execute the parser with the given test parameter
+  // Create the test case
+  testCase := &TestCase{
+    FileName: filename,
+    Content: content,
+    ExpectedOutput: expected,
+    Id: id,
+    PrettyName: pretty,
+  }
+
+  return testCase
+
+}
+
+func RunTest(test *TestCase) {
+
+  // Record the before time
   before := time.Now()
-  result, err := exec.Command(parserLoc, tc.Path).Output()
-  tc.Time = time.Since(before).Nanoseconds()
-  check(err)
 
-  // Store the result
-  tc.Output = string(result)
-  if len(tc.Output) > 0 && tc.Output[len(tc.Output)-1] == '\n' {
-    tc.Output = tc.Output[:len(tc.Output)-1]
-  }
+  // Run the test
+  result, err := exec.Command(BinaryLocation, test.FileName).Output()
+  test.Time = time.Since(before).Nanoseconds()
+  Check(err)
 
-  results <- tc
+  // Check the output against the expected
+  test.ActualOutput = StripEndNewline(string(result))
+  test.Passed = test.ActualOutput == test.ExpectedOutput
 
 }
 
-func printResults() {
-  for tc := range results {
-
-    // Check the result against what we expect
-    if tc.Output == tc.Expected {
-      printSuccess(tc)
-    } else {
-      printFailure(tc)
-    }
-
-    wg.Done()
-
+func PrintTestResult(test *TestCase) {
+  if (test.Passed) {
+    PrintTestPass(test)
+  } else {
+    PrintTestFail(test)
   }
 }
 
-func printSuccess(tc *TestCase) {
-  fmt.Fprintf(tabWriter, " ")
-  printGreen(tc.Id)
-  fmt.Fprintf(tabWriter, "\t" + tc.PrettyName() + "\t%d us\n", tc.Time / 1000)
+// ==========
+// Test Printing
+// ==========
+
+func PrintTestPass(test *TestCase) {
+  line := fmt.Sprintf("%s\t%s\t%dus\n", FormatGreen(test.Id), test.PrettyName, test.Time / 1000)
+  fmt.Fprintf(TabWriter, line)
 }
 
-func printFailure(tc *TestCase) {
-  fmt.Fprintf(tabWriter, " ")
-  printRed(tc.Id)
-  fmt.Fprintf(tabWriter, "\t" + tc.PrettyName() + "\n")
-  printFailureHeader("Expected")
-  fmt.Fprintf(tabWriter, tc.Expected + "\n")
-  printFailureHeader("Output")
-  fmt.Fprintf(tabWriter, tc.Output + "\n")
-  printFailureHeader("Test Case")
-  fmt.Fprintf(tabWriter, tc.Content + "\n")
-  printFailureFooter()
-  fmt.Println("\n")
+func PrintTestFail(test *TestCase) {
+  line := fmt.Sprintf("%s\t%s\t%dus\n", FormatRed(test.Id), test.PrettyName, test.Time / 1000)
+  fmt.Fprintf(TabWriter, line)
+  fmt.Fprintf(TabWriter, FormatRed("==== Expected ================\n"))
+  fmt.Fprintf(TabWriter, test.ExpectedOutput + "\n")
+  fmt.Fprintf(TabWriter, FormatRed("==== Output ==================\n"))
+  fmt.Fprintf(TabWriter, test.ActualOutput + "\n")
+  fmt.Fprintf(TabWriter, FormatRed("==== Test Case ===============\n"))
+  fmt.Fprintf(TabWriter, test.Content + "\n")
+  fmt.Fprintf(TabWriter, FormatRed("==============================\n\n"))
 }
 
-func printRed(s string) {
-  fmt.Fprintf(tabWriter, "\033[0;31m" + s + "\033[0;00m")
-}
+// ==========
+// Utility Functions
+// ==========
 
-func printGreen(s string) {
-  fmt.Fprintf(tabWriter, "\033[0;32m" + s + "\033[0;00m")
-}
-
-func printCyan(s string) {
-  fmt.Fprintf(tabWriter, "\033[1;36m" + s + "\033[0;00m")
-}
-
-func printFailureHeader(s string) {
-  printCyan("==== " + s + " ")
-  for i := 0; i < 30-len(s); i++ {
-    printCyan("=")
+func Check(er error) {
+  if er != nil {
+    panic(er)
   }
-  fmt.Fprintf(tabWriter, "\n")
 }
 
-func printFailureFooter() {
-  printCyan("====================================\n") // 36
+func StripEndNewline(s string) string {
+  if len(s) > 0 && s[len(s)-1] == '\n' {
+    return s[:len(s)-1]
+  } else {
+    return s
+  }
+}
+
+// Formats a string to be colored red
+func FormatRed(s string) string {
+  return "\033[0;31m" + s + "\033[0;00m"
+}
+
+// Formats a string to be colored yellow
+func FormatYellow(s string) string {
+  return "\033[1;33m" + s + "\033[0;00m"
+}
+
+// Formats a string to be colored green
+func FormatGreen(s string) string {
+  return "\033[0;32m" + s + "\033[0;00m"
+}
+
+// Formats a string to be colored cyan
+func FormatCyan(s string) string {
+  return "\033[1;36m" + s + "\033[0;00m"
 }
