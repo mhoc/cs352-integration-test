@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+var a = {
+  b: 348934,
+  c: "this is another string"
+}
+</script>
