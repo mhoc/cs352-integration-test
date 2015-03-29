@@ -39,7 +39,7 @@ func main() {
 
   // Init the tab writer
   TabWriter = new(tabwriter.Writer)
-  TabWriter.Init(os.Stdout, 0, 16, 0, '\t', 0)
+  TabWriter.Init(os.Stdout, 0, 8, 1, '\t', 0)
 
   // Init the test cases
   TestCases = make([]*TestCase, 0, 0)
@@ -94,8 +94,8 @@ func CreateTest(filename string) *TestCase {
   }
 
   // Remove trailing newlines from the expected output
-  content = StripEndNewline(content)
-  //expected = StripEndNewline(expected)
+  content = StripTabs(StripEndNewline(content))
+  expected = StripTabs(StripEndNewline(expected))
 
   // Generate an id
   md5h := md5.New()
@@ -121,12 +121,12 @@ func RunTest(test *TestCase) {
   before := time.Now()
 
   // Run the test
-  result, err := exec.Command(BinaryLocation, test.FileName).Output()
+  result, err := exec.Command(BinaryLocation, test.FileName).CombinedOutput()
   test.Time = time.Since(before).Nanoseconds()
   Check(err)
 
   // Check the output against the expected
-  test.ActualOutput = StripEndNewline(string(result))
+  test.ActualOutput = StripTabs(StripEndNewline(string(result)))
   test.Passed = test.ActualOutput == test.ExpectedOutput
 
 }
@@ -144,20 +144,20 @@ func PrintTestResult(test *TestCase) {
 // ==========
 
 func PrintTestPass(test *TestCase) {
-  line := fmt.Sprintf("%s\t%s\t%dus\n", FormatGreen(test.Id), test.PrettyName, test.Time / 1000)
+  line := fmt.Sprintf("%s\t%s\t%d us\n", FormatGreen(test.Id), test.PrettyName, test.Time / 1000)
   fmt.Fprintf(TabWriter, line)
 }
 
 func PrintTestFail(test *TestCase) {
-  line := fmt.Sprintf("%s\t%s\t%dus\n", FormatRed(test.Id), test.PrettyName, test.Time / 1000)
+  line := fmt.Sprintf("%s\t%s\t%d us\n", FormatRed(test.Id), test.PrettyName, test.Time / 1000)
   fmt.Fprintf(TabWriter, line)
-  fmt.Fprintf(TabWriter, FormatRed("==== Expected ================\n"))
+  fmt.Fprintf(TabWriter, FormatCyan("==== Expected ==========================") + "\n")
   fmt.Fprintf(TabWriter, test.ExpectedOutput + "\n")
-  fmt.Fprintf(TabWriter, FormatRed("==== Output ==================\n"))
+  fmt.Fprintf(TabWriter, FormatCyan("==== Output ============================") + "\n")
   fmt.Fprintf(TabWriter, test.ActualOutput + "\n")
-  fmt.Fprintf(TabWriter, FormatRed("==== Test Case ===============\n"))
+  fmt.Fprintf(TabWriter, FormatCyan("==== Test Case =========================") + "\n")
   fmt.Fprintf(TabWriter, test.Content + "\n")
-  fmt.Fprintf(TabWriter, FormatRed("==============================\n\n"))
+  fmt.Fprintf(TabWriter, FormatCyan("========================================") + "\n\n")
 }
 
 // ==========
@@ -178,6 +178,10 @@ func StripEndNewline(s string) string {
   }
 }
 
+func StripTabs(s string) string {
+  return strings.Replace(s, "\t", "", -1)
+}
+
 // Formats a string to be colored red
 func FormatRed(s string) string {
   return "\033[0;31m" + s + "\033[0;00m"
@@ -196,4 +200,8 @@ func FormatGreen(s string) string {
 // Formats a string to be colored cyan
 func FormatCyan(s string) string {
   return "\033[1;36m" + s + "\033[0;00m"
+}
+
+func FormatWhite(s string) string {
+  return "\033[0;00m" + s + "\033[0;00m"
 }
