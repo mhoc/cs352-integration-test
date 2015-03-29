@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var a = 12;
+var b = a;
+document.write(a,b)
+</script>
