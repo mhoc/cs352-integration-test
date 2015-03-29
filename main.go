@@ -4,6 +4,7 @@ package main
 import (
   "crypto/md5"
   "encoding/hex"
+  "flag"
   "fmt"
   "io"
   "io/ioutil"
@@ -22,6 +23,7 @@ var (
   TestCases []*TestCase
   TabWriter *tabwriter.Writer
   BinaryLocation string
+  ExitOnFail bool
 )
 
 type TestCase struct {
@@ -37,6 +39,11 @@ type TestCase struct {
 
 func main() {
 
+  // Set a flag for exiting on first fail with an error code
+  // This is necessary for my CI system
+  flag.BoolVar(&ExitOnFail, "exit-on-fail", false, "Exit and return a failure code when the first test fails")
+  flag.Parse()
+
   // Init the tab writer
   TabWriter = new(tabwriter.Writer)
   TabWriter.Init(os.Stdout, 0, 8, 1, '\t', 0)
@@ -45,10 +52,10 @@ func main() {
   TestCases = make([]*TestCase, 0, 0)
 
   // Get the location of the binary
-  if (len(os.Args) != 2) {
+  if (flag.NArg() != 1) {
     panic("Must provide path to binary")
   } else {
-    BinaryLocation = os.Args[1]
+    BinaryLocation = flag.Arg(0)
   }
 
   // Open the directory of test cases
@@ -158,6 +165,11 @@ func PrintTestFail(test *TestCase) {
   fmt.Fprintf(TabWriter, FormatCyan("==== Test Case =========================") + "\n")
   fmt.Fprintf(TabWriter, test.Content + "\n")
   fmt.Fprintf(TabWriter, FormatCyan("========================================") + "\n\n")
+  if (ExitOnFail) {
+    TabWriter.Flush()
+    fmt.Println("Test failure caught. Exiting and reporting error.")
+    os.Exit(1)
+  }
 }
 
 // ==========
