@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var a = 5 + 4 + 3
+document.write(a)
+</script>

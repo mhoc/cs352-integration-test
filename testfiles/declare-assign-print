@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var a
+a = 55
+document.write(a)
+</script>
