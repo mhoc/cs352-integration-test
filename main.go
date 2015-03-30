@@ -156,15 +156,15 @@ func PrintTestPass(test *TestCase) {
 }
 
 func PrintTestFail(test *TestCase) {
-  line := fmt.Sprintf("%s\t%s\t%d us\n", FormatRed(test.Id), test.PrettyName, test.Time / 1000)
+  line := fmt.Sprintf("%s\t%s\t%d us\n", FormatLightRed(test.Id), test.PrettyName, test.Time / 1000)
   fmt.Fprintf(TabWriter, line)
-  fmt.Fprintf(TabWriter, FormatCyan("==== Expected ==========================") + "\n")
+  fmt.Fprintf(TabWriter, FormatLightRed("==== Expected ==========================") + "\n")
   fmt.Fprintf(TabWriter, test.ExpectedOutput + "\n")
-  fmt.Fprintf(TabWriter, FormatCyan("==== Output ============================") + "\n")
+  fmt.Fprintf(TabWriter, FormatLightRed("==== Output ============================") + "\n")
   fmt.Fprintf(TabWriter, test.ActualOutput + "\n")
-  fmt.Fprintf(TabWriter, FormatCyan("==== Test Case =========================") + "\n")
+  fmt.Fprintf(TabWriter, FormatLightRed("==== Test Case =========================") + "\n")
   fmt.Fprintf(TabWriter, test.Content + "\n")
-  fmt.Fprintf(TabWriter, FormatCyan("========================================") + "\n\n")
+  fmt.Fprintf(TabWriter, FormatLightRed("========================================") + "\n\n")
   if (ExitOnFail) {
     TabWriter.Flush()
     fmt.Println("Test failure caught. Exiting and reporting error.")
@@ -197,6 +197,11 @@ func StripTabs(s string) string {
 // Formats a string to be colored red
 func FormatRed(s string) string {
   return "\033[0;31m" + s + "\033[0;00m"
+}
+
+// Formats a string light red
+func FormatLightRed(s string) string {
+  return "\033[1;31m" + s + "\033[0;00m"
 }
 
 // Formats a string to be colored yellow

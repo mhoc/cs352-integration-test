@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var a = 1 + 2 * ((3+5+2) - 1) / (2 - 1)
+document.write(a)
+</script>

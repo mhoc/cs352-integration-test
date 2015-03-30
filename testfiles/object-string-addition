@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+var a = {
+  b: "hello " + "world"
+}
+document.write(a.b)
+</script>
