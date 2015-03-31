@@ -12,16 +12,32 @@ lab handouts, and other students' public test cases.
 
 File an issue on the right, open a pull request, or contact me otherwise.
 
-# Setup
+# Easy Setup
 
-As with any go program, ensure you have $GOPATH set properly.
-See [this link](https://golang.org/doc/code.html) for more information.
+These commands download, run, and clean the test files in one swoop...
 
-# Installing
+```
+git clone http://github.com/mhoc/cs352-test.git
+cd cs352-integration-test && go run main.go ../parser
+rm -rf cs352-test
+```
 
-`git clone http://github.com/mhoc/cs352-integration-test`
+Or you can set it up to not have to download each time...
 
-# Running
+```
+git clone http://github.com/mhoc/cs352-test.git test
+```
+
+And add to your makefile...
+
+```
+test:
+  cd test && git pull && go run main.go ../parser
+```
+
+Up to you!
+
+# Run Options
 
 `go run main.go path/to/binary`
 

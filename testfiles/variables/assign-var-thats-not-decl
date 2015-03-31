@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var b = a
+document.write(b)
+</script>
