@@ -92,11 +92,14 @@ func main() {
 
   // Print out some statistics about the tests
   var nPassed int
+  var average float64
   nTotal := len(TestCaseList)
   for _, tc := range TestCaseList {
+    average += float64(tc.Time)
     if tc.Passed { nPassed++ }
   }
-  fmt.Printf(FormatYellow("\nYou passed %d cases out of %d.\n"), nPassed, nTotal)
+  fmt.Printf(FormatYellow("\nYou passed %d cases out of %d\n"), nPassed, nTotal)
+  fmt.Printf(FormatYellow("With an average time of %4.f us\n"), average/float64(nTotal))
 
   if nPassed == nTotal {
     st := FormatRed("C") + FormatLightRed("O") + FormatYellow("N") + FormatGreen("G") +
@@ -158,7 +161,7 @@ func RunTest(test *TestCase) {
 
   // Run the test
   result, err := exec.Command(BinaryLocation, test.FileName).CombinedOutput()
-  test.Time = time.Since(before).Nanoseconds()
+  test.Time = time.Since(before).Nanoseconds() / 1000
   Check(err)
 
   // Check the output against the expected
@@ -175,17 +178,17 @@ func PrintTestResult(test *TestCase) {
   }
 }
 
-// ==========
+// =============
 // Test Printing
-// ==========
+// =============
 
 func PrintTestPass(test *TestCase) {
-  line := fmt.Sprintf("%s\t%s\t%d us\n", FormatGreen(test.Id), test.PrettyName, test.Time / 1000)
+  line := fmt.Sprintf("%s\t%s\t%d us\n", FormatGreen(test.Id), test.PrettyName, test.Time)
   fmt.Fprintf(TabWriter, line)
 }
 
 func PrintTestFail(test *TestCase) {
-  line := fmt.Sprintf("%s\t%s\t%d us\n", FormatLightRed(test.Id), test.PrettyName, test.Time / 1000)
+  line := fmt.Sprintf("%s\t%s\t%d us\n", FormatLightRed(test.Id), test.PrettyName, test.Time)
   fmt.Fprintf(TabWriter, line)
   fmt.Fprintf(TabWriter, FormatLightRed("==== Expected ==========================") + "\n")
   fmt.Fprintf(TabWriter, test.ExpectedOutput + "\n")
@@ -217,9 +220,9 @@ func (tcs TestCases) Less(i, j int) bool {
   return tcs[i].PrettyName < tcs[j].PrettyName
 }
 
-// ==========
+// =================
 // Utility Functions
-// ==========
+// =================
 
 func Check(er error) {
   if er != nil {
