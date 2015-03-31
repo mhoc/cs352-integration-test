@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+var a = 1
+var b = 2
+var c = 3
+var d = (a + b) * (c * b)
+var e = d - c
+var f = e / c * b
+document.write(f)
+</script>
