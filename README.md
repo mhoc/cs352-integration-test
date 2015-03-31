@@ -19,23 +19,33 @@ See [this link](https://golang.org/doc/code.html) for more information.
 
 # Installing
 
-`go get github.com/mhoc/cs352-integration-test`
+`git clone http://github.com/mhoc/cs352-integration-test`
 
 # Running
 
-`go run github.com/mhoc/cs352-integration-test location/to/binary`
+`go run main.go path/to/binary`
 
-Obviously insert the path to your binary. You can add this line to your make
-file if you like. If $GOPATH is set properly then you can run it from anywhere
-on your system and it will work. Go is pretty cool, huh?
+`go run main.go -exit-on-fail path/to/binary`
+This will cause the test suite to exit when it encounters its first failure.
+You can use this to decrease the output you need to read.
 
 # Test Files
 
-Each test file has a name which is pretty-printed to the output when the
-tests are run. The name comes from the file name.
+The testfiles are located in multiple subfolders under the folder `testfiles/`.
+Each subfolder is a type of feature of the language and contains both pass
+and failure tests which test for proper output from the compiler.
 
-The tests are located in `testfiles/`. The test case has a name with no
-periods in it, and the results of that test case is contained in a file
-with the same name but with the extension .outp. If no `.outp` file is
-defined for a given test, it is assumed the compiler should output
-nothing.
+Each test file attempts to test one single feature. That being said, there are
+some core features which are impossible to avoid in most tests. These features
+are tested in the `testfiles/core/` module and are tested first. They include
+things like basic document structure (header/ending tags) and
+very basic document.write().
+
+If a testfile has output, it is contained in a similarly named file with a
+`.outp` extension.
+
+# Output
+
+In addition to pass/fail, you will receive the time it took to complete the
+test in microseconds. If you fail a test, you will receive a printout of
+the expected output, your output, and the test case itself. Super handy.

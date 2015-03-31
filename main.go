@@ -15,15 +15,18 @@ import (
   "time"
 )
 
-const (
-  TEST_FILES = "testfiles/"
-)
-
 var (
   TestCases []*TestCase
   TabWriter *tabwriter.Writer
   BinaryLocation string
   ExitOnFail bool
+
+  TestFiles = []string{
+    "testfiles/core/",
+    "testfiles/variables/",
+    "testfiles/expressions/",
+    "testfiles/objects/",
+  }
 )
 
 type TestCase struct {
@@ -59,16 +62,18 @@ func main() {
   }
 
   // Open the directory of test cases
-  files, err := ioutil.ReadDir(TEST_FILES)
-  Check(err)
+  for _, directory := range TestFiles {
+    files, err := ioutil.ReadDir(directory)
+    Check(err)
 
-  // Create a test case for each file
-  for _, file := range files {
-    if strings.Contains(file.Name(), ".outp") {
-      continue
+    // Create a test case for each file
+    for _, file := range files {
+      if strings.Contains(file.Name(), ".outp") {
+        continue
+      }
+      filename := directory + file.Name()
+      TestCases = append(TestCases, CreateTest(filename))
     }
-    filename := TEST_FILES + file.Name()
-    TestCases = append(TestCases, CreateTest(filename))
   }
 
   // Run and print the test results
