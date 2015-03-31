@@ -10,13 +10,14 @@ import (
   "io/ioutil"
   "os"
   "os/exec"
+  "sort"
   "strings"
   "text/tabwriter"
   "time"
 )
 
 var (
-  TestCases []*TestCase
+  TestCaseList []*TestCase
   TabWriter *tabwriter.Writer
   BinaryLocation string
   ExitOnFail bool
@@ -28,6 +29,8 @@ var (
     "testfiles/objects/",
   }
 )
+
+type TestCases []*TestCase
 
 type TestCase struct {
   FileName string
@@ -52,7 +55,7 @@ func main() {
   TabWriter.Init(os.Stdout, 0, 8, 1, '\t', 0)
 
   // Init the test cases
-  TestCases = make([]*TestCase, 0, 0)
+  TestCaseList = make([]*TestCase, 0, 0)
 
   // Get the location of the binary
   if (flag.NArg() != 1) {
@@ -72,17 +75,38 @@ func main() {
         continue
       }
       filename := directory + file.Name()
-      TestCases = append(TestCases, CreateTest(filename))
+      TestCaseList = append(TestCaseList, CreateTest(filename))
     }
   }
 
+  // Sort the list of filenames by test name
+  sort.Sort(TestCases(TestCaseList))
+
   // Run and print the test results
-  for _, test := range TestCases {
+  for _, test := range TestCaseList {
     RunTest(test)
     PrintTestResult(test)
   }
 
   TabWriter.Flush()
+
+  // Print out some statistics about the tests
+  var nPassed int
+  nTotal := len(TestCaseList)
+  for _, tc := range TestCaseList {
+    if tc.Passed { nPassed++ }
+  }
+  fmt.Printf(FormatYellow("\nYou passed %d cases out of %d.\n"), nPassed, nTotal)
+
+  if nPassed == nTotal {
+    st := FormatRed("C") + FormatLightRed("O") + FormatYellow("N") + FormatGreen("G") +
+      FormatCyan("R") + FormatBlue("A") + FormatPurple("T") + FormatRed("U") + FormatLightRed("L") +
+      FormatYellow("A") + FormatCyan("T") + FormatBlue("I") + FormatPurple("O") + FormatRed("N") +
+      FormatLightRed("S")
+    fmt.Printf("%s\n\n", st)
+  } else {
+    fmt.Printf("\n\n")
+  }
 
 }
 
@@ -177,6 +201,22 @@ func PrintTestFail(test *TestCase) {
   }
 }
 
+// ===============================================
+// Implementation of sort interface for test cases
+// ===============================================
+
+func (tcs TestCases) Len() int {
+  return len(tcs)
+}
+
+func (tcs TestCases) Swap(i, j int) {
+  tcs[i], tcs[j] = tcs[j], tcs[i]
+}
+
+func (tcs TestCases) Less(i, j int) bool {
+  return tcs[i].PrettyName < tcs[j].PrettyName
+}
+
 // ==========
 // Utility Functions
 // ==========
@@ -222,6 +262,16 @@ func FormatGreen(s string) string {
 // Formats a string to be colored cyan
 func FormatCyan(s string) string {
   return "\033[1;36m" + s + "\033[0;00m"
+}
+
+// Formats a string to be colored blue
+func FormatBlue(s string) string {
+  return "\033[0;34m" + s + "\033[0;00m"
+}
+
+// Formats a string to be colored purple
+func FormatPurple(s string) string {
+  return "\033[0;35m" + s + "\033[0;00m"
 }
 
 func FormatWhite(s string) string {
