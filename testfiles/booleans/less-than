@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var a = 15
+var b = a < 12
+document.write(b, 12 < a, 15 < 15, 0 < a)
+</script>

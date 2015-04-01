@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+var a = {}
+var b = {}
+var c = {}
+document.write(a,b,c)
+</script>

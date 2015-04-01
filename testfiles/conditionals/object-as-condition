@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+var a = {}
+if (a) {
+  document.write("aa")
+} else {
+  document.write("bb")
+}
+document.write("cc")
+</script>

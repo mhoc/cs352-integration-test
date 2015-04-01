@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var a = 12
+document.write(a > 3, a > 9, a > 12, a > 15)
+</script>

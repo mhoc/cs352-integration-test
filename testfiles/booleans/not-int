@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var a = 0
+var b = 55
+document.write(!a, !b, !0, !42)
+</script>

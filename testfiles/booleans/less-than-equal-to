@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var a = 5
+document.write(a <= 5, 5 <= a, 5 <= 5, a <= 10, 10 <= 5)
+</script>
