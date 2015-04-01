@@ -1,0 +1,7 @@
+<script type="text/JavaScript">
+if ("") {
+    document.write("fail", "<br />")
+} else {
+    document.write("pass", "<br />")
+}
+</script>
