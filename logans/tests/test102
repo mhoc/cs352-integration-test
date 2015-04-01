@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+var arr = [1,2,3]
+arr[100] = 2
+if (arr[1] > arr[2]) {
+    document.write("fail", "<br />")
+} else {
+    document.write("pass", "<br />")
+}
+</script>

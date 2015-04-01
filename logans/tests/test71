@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var a = obj.a
+var w = obj.a + obj.b
+</script>

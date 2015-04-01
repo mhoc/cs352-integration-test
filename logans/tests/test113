@@ -1,0 +1,7 @@
+<script type="text/JavaScript">
+var x = 5
+while (x > 0) {
+    var a = "a" + 1
+    x = x - 1
+}
+</script>

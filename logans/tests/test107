@@ -1,0 +1,10 @@
+<script type="text/JavaScript">
+var a = "string"
+var b = "str" + "ing"
+var lb = "<br />"
+if (a == b) {
+    document.write("pass", lb)
+} else {
+    document.write("fail", lb)
+}
+</script>

@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+x = 1
+var lb = "<br />"
+if (x == 1) {
+    document.write("pass", lb)
+} else {
+    document.write("fail", lb)
+}
+</script>

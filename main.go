@@ -27,6 +27,7 @@ var (
     "testfiles/variables/",
     "testfiles/expressions/",
     "testfiles/objects/",
+    "testfiles/booleans/",
     "testfiles/conditionals/",
   }
 )

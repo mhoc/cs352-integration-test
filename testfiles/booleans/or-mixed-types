@@ -1,0 +1,8 @@
+<script type="text/JavaScript">
+var b = true
+var i = 0
+var s = ""
+
+document.write(b || i, b || s, i || s)
+
+</script>

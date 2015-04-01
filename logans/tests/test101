@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+var arr = [1,2,3]
+arr[100] = 2
+if (arr[100] == 2 && arr[0] == 1) {
+    document.write("pass", "<br />")
+} else {
+    document.write("fail", "<br />")
+}
+</script>

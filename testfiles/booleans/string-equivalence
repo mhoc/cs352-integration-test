@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var a = "hello" == "hello"
+var b = "0.9" == ".9"
+document.write(a,b)
+</script>

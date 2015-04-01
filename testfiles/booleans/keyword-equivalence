@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var a = true
+var b = true
+document.write(a == b, a != b)
+</script>

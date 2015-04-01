@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+var a = {
+    name: "Logan"
+}
+document.write(a[0], "<br />")
+</script>

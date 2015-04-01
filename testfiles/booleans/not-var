@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var a = true
+document.write(!a)
+</script>

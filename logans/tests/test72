@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+if (3 == 3) {
+    document.write(3 == 3)
+    document.write("<br />")
+}
+</script>

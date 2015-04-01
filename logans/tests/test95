@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var arr = ["str"]
+document.write("pass", "<br />")
+</script>

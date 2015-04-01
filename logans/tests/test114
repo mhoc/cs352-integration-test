@@ -1,0 +1,8 @@
+<script type="text/JavaScript">
+if (x < y) {
+    A = 1; do {
+        A = 2; B = 3;
+        C = 3;
+    } while (A == 2);
+}
+</script>

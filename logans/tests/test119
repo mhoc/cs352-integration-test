@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+var a = [1,2,3]
+a[0] = 5
+a[20] = 1
+document.write(a[5], "<br />")
+</script>

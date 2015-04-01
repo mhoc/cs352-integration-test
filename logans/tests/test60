@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+x = 1
+var a = "a" + 1 + x
+</script>

@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var a = {a: "hey"}
+var b;
+var c = a.a + b
+</script>

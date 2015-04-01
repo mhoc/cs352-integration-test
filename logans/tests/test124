@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+x = 0
+while (x < 10) {
+    if (x / 2 == 2 || x / 2 == 4) {
+        document.write(x, "<br />")
+    }
+    x = x + 1
+}
+</script>

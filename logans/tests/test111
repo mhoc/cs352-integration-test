@@ -1,0 +1,13 @@
+<script type="text/JavaScript">
+var i = 1
+var lb = "<br />"
+while (i <= 10) {
+    var j = 1
+    while (j <= 10) {
+        document.write(i * j, " ")
+        j = j + 1
+    }
+    document.write(lb)
+    i = i + 1
+}
+</script>

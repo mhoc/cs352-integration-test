@@ -1,0 +1,10 @@
+<script type="text/JavaScript">
+var arr = [
+    "Abe",
+    "Lincoln",
+    "Vampire " + "Hunter",
+    150,
+    "Coming soon to a theater near you"
+]
+document.write("pass", "<br />")
+</script>

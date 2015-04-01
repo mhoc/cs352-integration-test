@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+do {
+    document.write("fail", "<br />")
+}
+while(false); var x = 1
+</script>

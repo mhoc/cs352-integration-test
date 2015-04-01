@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var a = 5
+var b = {c: "hello"}
+var d = a + b
+</script>

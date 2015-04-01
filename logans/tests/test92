@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+var x = 5
+document.write("pass", "<br />")
+while (x > 0) {
+    x = x - 1
+    continue
+    document.write("fail", "<br />")
+}
+</script>
