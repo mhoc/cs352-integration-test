@@ -31,6 +31,7 @@ var (
     "testfiles/booleans/",
     "testfiles/conditionals/",
     "testfiles/loops/",
+    "testfiles/complex/",
   }
 )
 
