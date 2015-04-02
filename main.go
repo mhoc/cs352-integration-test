@@ -30,6 +30,7 @@ var (
     "testfiles/arrays/",
     "testfiles/booleans/",
     "testfiles/conditionals/",
+    "testfiles/loops/",
   }
 )
 

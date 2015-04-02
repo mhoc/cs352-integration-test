@@ -1,0 +1,12 @@
+<script type="text/JavaScript">
+var a = 0
+do {
+  document.write(a)
+}
+while (a != 0)
+do {
+  document.write(a)
+  a = a + 1
+}
+while (a < 5);
+</script>

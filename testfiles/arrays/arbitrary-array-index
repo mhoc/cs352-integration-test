@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+var a = [1,2,3]
+a[150] = 45
+a[74] = 6
+document.write(a[0],a[74],a[150],a[32])
+</script>

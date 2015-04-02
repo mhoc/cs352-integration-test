@@ -9,6 +9,11 @@ Logan!) and elsewhere.
 I am convinced that this is the single most advanced test runner and most
 comprehensive test suite available for the parser, and it is updated every day.
 
+**Note**: The one thing none of these test cases check for is that all of your
+error output is done on stderr. These combine stderr and stdout into one
+output as if a user were actually using your program. Run Logan's test cases
+(inside this repository under `logans/`) to check for this at least once.
+
 # Add a test case? See an error?
 
 File an issue on the right, open a pull request, or contact me otherwise.

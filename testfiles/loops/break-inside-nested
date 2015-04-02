@@ -1,0 +1,15 @@
+<script type="text/JavaScript">
+var a = 0
+var b = 0
+while (a < 5) {
+  b = 0
+  while (b < 5) {
+    if (b == 2) {
+      break
+    }
+    document.write(a,b)
+    b = b + 1
+  }
+  a = a + 1
+}
+</script>
