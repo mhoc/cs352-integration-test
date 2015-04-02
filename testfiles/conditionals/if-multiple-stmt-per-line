@@ -1,0 +1,7 @@
+<script type="text/JavaScript">
+var a = true
+if (a) {
+  document.write("aa"); document.write("bb"); a = 5
+  document.write(a)
+}
+</script>

@@ -1,16 +1,18 @@
 
-# MSP Integration Tests
+# MSP Test Suite
 
-These tests are designed to test the MSP binary by comparing
-output. They are highly accurate tests which look for exact output from
-the compiler. It provides actionable feedback when an error occurs.
-The selection of test cases is meant to be comprehensive, and as such
-multiple different sources are used to create them, including Piazza, the
-lab handouts, and other students' public test cases.
+This is a test suite for running a series of tests designed for the miniscript
+parser. These tests are compiled from a variety of sources, including the
+lab handouts, instructor piazza notes, other students' test cases (thanks
+Logan!) and elsewhere.
 
-# See An Error?
+I am convinced that this is the single most advanced test runner and most
+comprehensive test suite available for the parser, and it is updated every day.
+
+# Add a test case? See an error?
 
 File an issue on the right, open a pull request, or contact me otherwise.
+(mike@hockerman.com)
 
 # Easy Setup
 

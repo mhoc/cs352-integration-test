@@ -27,6 +27,7 @@ var (
     "testfiles/variables/",
     "testfiles/expressions/",
     "testfiles/objects/",
+    "testfiles/arrays/",
     "testfiles/booleans/",
     "testfiles/conditionals/",
   }
@@ -164,12 +165,17 @@ func RunTest(test *TestCase) {
   // Run the test
   result, err := exec.Command(BinaryLocation, test.FileName).CombinedOutput()
   test.Time = time.Since(before).Nanoseconds() / 1000
-  Check(err)
-
-  // Check the output against the expected
-  test.ActualOutput = StripTabs(StripEndNewline(string(result)))
-  test.Passed = test.ActualOutput == test.ExpectedOutput
-
+  if err != nil {
+    pre := "Your parser returned a non-zero exit code\n"
+    pre += "This generally means something very bad, like a segfault, happened\n"
+    pre += "The output is below\n----------------------------------------\n"
+    test.ActualOutput = StripTabs(StripEndNewline(pre + string(result)))
+    test.Passed = false
+  } else {
+    // Check the output against the expected
+    test.ActualOutput = StripTabs(StripEndNewline(string(result)))
+    test.Passed = test.ActualOutput == test.ExpectedOutput
+  }
 }
 
 func PrintTestResult(test *TestCase) {

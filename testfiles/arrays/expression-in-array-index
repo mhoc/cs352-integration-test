@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var a = ["h", "e", "l", "o", "z"]
+document.write(a[5-2], a[4-4+1])
+</script>

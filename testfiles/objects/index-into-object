@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var a = {he: "hello"}
+document.write(a[0])
+</script>

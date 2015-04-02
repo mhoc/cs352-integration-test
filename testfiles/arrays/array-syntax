@@ -1,0 +1,15 @@
+<script type="text/JavaScript">
+var xx = "hi"
+var a = ["hello", 1, 2, "three", xx];
+var b = [
+  1,
+  "hello",
+  2,
+  "goodbye",
+  xx
+];
+var c = [
+  "hello", xx, "there", 5,
+  "hi there", 12
+]
+</script>

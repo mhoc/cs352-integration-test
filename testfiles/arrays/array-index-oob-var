@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var a = [1,2,3]
+var i = 3
+document.write(a[i])
+</script>

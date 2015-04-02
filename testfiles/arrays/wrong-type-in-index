@@ -1,0 +1,4 @@
+<script type="text/JavaScript">
+var a = [1,2,3]
+var b = a["hello"]
+</script>
