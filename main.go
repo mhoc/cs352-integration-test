@@ -32,6 +32,7 @@ var (
     "testfiles/conditionals/",
     "testfiles/loops/",
     "testfiles/complex/",
+    "testfiles/part-3-provided/",
   }
 )
 
@@ -42,7 +43,9 @@ type TestCase struct {
   PrettyName string
   Content string
   ExpectedOutput string
+  ExpectedError string
   ActualOutput string
+  ActualError string
   Id string
   Passed bool
   Time int64
@@ -161,19 +164,29 @@ func CreateTest(filename string) *TestCase {
 
 func RunTest(test *TestCase) {
 
-  // Record the before time
-  before := time.Now()
+  // Run the test and open pipes to the output
+  command := exec.Command(BinaryLocation, test.FileName)
+  stdoutPipe, err1 := command.StdoutPipe()
+  stderrPipe, err2 := command.StderrPipe()
+
+  // Exit the test runner if there was an error opening the pipe
+  if (err1 != nil || err2 != nil) {
+    panic("There was an error opening the output pipe to the process")
+  }
 
   // Run the test
-  result, err := exec.Command(BinaryLocation, test.FileName).CombinedOutput()
-  test.Time = time.Since(before).Nanoseconds() / 1000
-  if err != nil {
+  before := time.Now()
+  if (err := command.Run(); err != nil) {
     pre := "Your parser returned a non-zero exit code\n"
-    pre += "This generally means something very bad, like a segfault, happened\n"
-    pre += "The output is below\n----------------------------------------\n"
+    pre += "The output is below\n-------------------------------\n"
     test.ActualOutput = StripTabs(StripEndNewline(pre + string(result)))
     test.Passed = false
-  } else {
+  }
+  test.Time = time.Since(before).Nanoseconds() / 1000
+
+  // Read the output and error
+  outb, err := ioutil.ReadAll(stdoutPipe)
+  errb, err =
     // Check the output against the expected
     test.ActualOutput = StripTabs(StripEndNewline(string(result)))
     test.Passed = test.ActualOutput == test.ExpectedOutput
