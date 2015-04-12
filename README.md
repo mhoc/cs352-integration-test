@@ -9,6 +9,10 @@ Logan!) and elsewhere.
 I am convinced that this is the single most advanced test runner and most
 comprehensive test suite available for the parser, and it is updated every day?
 
+![Running All The Tests](http://i.imgur.com/nGcIhps.png)
+
+![Seeing Output For A Test That Failed](http://i.imgur.com/QTT9qtQ.png)
+
 # Add a test case? See an error?
 
 File an issue on the right, open a pull request, or contact me otherwise.
