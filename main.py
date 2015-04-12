@@ -1,0 +1,207 @@
+
+# =======
+# Imports
+# =======
+
+import os
+from os import listdir
+from os.path import isdir, isfile, join
+from subprocess import Popen, PIPE
+import sys
+
+# =======
+# Globals
+# =======
+
+testNo = 0
+totalPassed = 0
+binaryLocation = ""
+tests = []
+
+# ==============
+# Util Functions
+# ==============
+
+def stripEndNl(st):
+    if len(st) > 0 and st[len(st)-1] == '\n':
+        return st[:len(st)-1]
+    return st
+
+# ==================
+# Printing Functions
+# ==================
+
+def green(st):
+    sys.stdout.write('\033[92m' + st + '\033[0m')
+
+def red(st):
+    sys.stdout.write('\033[91m' + st + '\033[0m')
+
+def pink(st):
+    sys.stdout.write('\033[95m' + st + '\033[0m')
+
+def blue(st):
+    sys.stdout.write('\033[94m' + st + '\033[0m')
+
+def clearLine():
+    sys.stdout.write('\r')
+    for i in xrange(0, 100):
+        sys.stdout.write(' ')
+    sys.stdout.write('\r')
+
+def printHeader(header):
+    pink("\n=== " + header + " ")
+    for i in xrange(len(header), 75):
+        pink("=")
+    print ""
+
+def printTestCase(test):
+    f = open(test, "r")
+    ln = 1
+    for line in f:
+        pink(str(ln) + "| ")
+        sys.stdout.write(line)
+        ln += 1
+
+def printSplit(expected, got, splitPt):
+    expsp = expected.split("\n")
+    gotsp = got.split("\n")
+    longestLine = splitPt
+    iExp, iGot = 0, 0
+    while iExp < len(expsp) or iGot < len(gotsp):
+        if iExp < len(expsp):
+            sys.stdout.write(expsp[iExp])
+            for i in xrange(len(expsp[iExp]), longestLine):
+                sys.stdout.write(" ")
+            pink(" |")
+        else:
+            for i in xrange(0, longestLine):
+                sys.stdout.write(" ")
+            pink("-|")
+        if iGot < len(gotsp):
+            print "", gotsp[iGot]
+        else:
+            pink("-\n")
+        iExp += 1
+        iGot += 1
+
+def printOutErr(expOut, gotOut, expErr, gotErr):
+    m = -1
+    for line in expOut.split("\n"):
+        if len(line) > m:
+            m = len(line)
+    for line in expErr.split("\n"):
+        if len(line) > m:
+            m = len(line)
+    printHeader("Stdout === [Expected | Actual]")
+    printSplit(expOut, gotOut, m)
+    printHeader("Stderr === [Expected | Actual]")
+    printSplit(expErr, gotErr, m)
+
+# ==================
+# Core Functionality
+# ==================
+
+# Runs a single test. Returns true if it passes, otherwise false.
+# Printing can be enabled by passing in true for verbosity
+def runTest(testfile, verbose=False):
+    global testNo, totalPassed
+    testNo += 1
+    process = Popen([binaryLocation, testfile], stdout=PIPE, stderr=PIPE)
+    stdout, stderr = process.communicate()
+    stdout, stderr = stripEndNl(stdout), stripEndNl(stderr)
+    expectedOut, expectedError = "", ""
+    passed = True
+    if verbose:
+        printHeader(testfile.split("/")[2].replace("-", " ").title())
+        printTestCase(testfile)
+    if isfile(testfile + ".outp"):
+        f = open(testfile + ".outp")
+        expectedOut = stripEndNl(f.read())
+    passed = expectedOut == stdout
+    if isfile(testfile + ".error"):
+        f = open(testfile + ".error")
+        expectedError = stripEndNl(f.read())
+    passed = passed and expectedError == stderr
+    if verbose:
+        printOutErr(expectedOut, stdout, expectedError, stderr)
+    if verbose and passed:
+        green("\n" + u"\u2713" + " Test Passed\n")
+    elif verbose and not passed:
+        red("\n" + u"\u2717" + " Test Failed\n")
+    if passed:
+        totalPassed += 1
+    return passed
+
+# Runs a single module, with print handling
+def runModule(module):
+    failed = []
+    passedIn, totalIn = 0, 0
+    pink(module.split("/")[1].replace("-", " ").title() + "\n\tPassed 0 of 0 tests")
+    cases = [ join(module, f) for f in listdir(module) if isfile(join(module, f)) and not ".outp" in f and not ".error" in f]
+    for case in cases:
+        totalIn += 1
+        if runTest(case):
+            passedIn += 1
+        else:
+            failed.append(testNo)
+        clearLine()
+        pink("|")
+        sys.stdout.write("\tPassed {} of {} tests".format(passedIn, totalIn))
+    if len(failed) > 0:
+        print ""
+        pink("|")
+        red("\tFailed ")
+        for case in failed:
+            red(str(case) + " ")
+    else:
+        clearLine()
+        pink("|")
+        green("\tPassed all cases")
+    print ""
+
+# Runs every test case in alphabetical order {module}->{test-name}
+def runTests():
+    modules = [ join("cases", f) for f in listdir("cases") if isdir(join("cases",f)) ]
+    for module in modules:
+        runModule(module)
+    if testNo != totalPassed:
+        blue("\nPassed:\t{}\nFailed:\t{}\nTotal:\t{}\n".format(totalPassed, testNo-totalPassed, testNo))
+        blue("Run 'python main.py [binary] [test-no]' to see detailed output about a specific test you failed\n")
+    else:
+        blue("You pass everything I can throw at it.\n")
+
+# This is used during specific test case running so we know which numbered test case
+# the user is trying to access. Otherwise we iterate by module, but it ends up being
+# in the same order in both cases.
+def loadAllTests():
+    modules = [ join("cases", f) for f in listdir("cases") if isdir(join("cases",f)) ]
+    for module in modules:
+        tests.extend([ join(module, f) for f in listdir(module) if isfile(join(module, f)) and not ".outp" in f and not ".error" in f])
+
+# ===============
+# Begin Execution
+# ===============
+
+def printHelp():
+    print "Usage:"
+    print "python main.py [path-to-binary]"
+    print "\tRuns all of the test cases against your binary and prints succinct results"
+    print "python main.py [path-to-binary] [test-number]"
+    print "\tRuns your binary against a single test and prints expanded results"
+
+if len(sys.argv) == 2:
+    if sys.argv[1] == '-h' or sys.argv[1] == '--help':
+        printHelp()
+        sys.exit(0)
+    binaryLocation = sys.argv[1]
+    print ""
+    runTests()
+elif len(sys.argv) == 3:
+    binaryLocation = sys.argv[1]
+    loadAllTests()
+    runTest(tests[int(sys.argv[2])], True)
+else:
+    printHelp()
+
+print ""
