@@ -59,6 +59,11 @@ inevitable.
 of `!(x - y)` on line 21. It is included as a test here but I have modified
 the expected output to be empty and expected error to be a `syntax error`
 
+* In Part 2 Official, I removed test labeled "19.js19.js" as it appears to
+be a repeat of 18.js (or, p2-ta-18 on my runner)
+
+* 
+
 # Final Notes
 
 Getting 100% on these test cases does not mean you will get 100% on the
