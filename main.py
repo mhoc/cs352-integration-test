@@ -148,7 +148,6 @@ def runModule(module):
     pink(module.split("/")[1].replace("-", " ").title() + "\n|\tPassed 0 of 0 tests")
     cases = [ join(module, f) for f in listdir(module) if isfile(join(module, f)) and not ".outp" in f and not ".error" in f]
     for case in cases:
-        time.sleep(0.005) # OK FINE, MAYBE I WANT YOU TO SEE MY AWESOME TEXT AUTO-UPDATING, IT TOOK A LOT OF WORK OK?!
         totalIn += 1
         if runTest(case):
             passedIn += 1
