@@ -6,6 +6,7 @@
 import os
 from os import listdir
 from os.path import isdir, isfile, join
+import time
 from subprocess import Popen, PIPE
 import sys
 
@@ -13,7 +14,7 @@ import sys
 # Globals
 # =======
 
-testNo = 0
+testNo = -1
 totalPassed = 0
 binaryLocation = ""
 tests = []
@@ -50,16 +51,16 @@ def clearLine():
     sys.stdout.write('\r')
 
 def printHeader(header):
-    pink("\n=== " + header + " ")
+    pink("\033[4m\n=== " + header + " \033[0m")
     for i in xrange(len(header), 75):
-        pink("=")
+        pink("\033[4m=\033[0m")
     print ""
 
 def printTestCase(test):
     f = open(test, "r")
     ln = 1
     for line in f:
-        pink(str(ln) + "| ")
+        pink("{:0>2d}| ".format(ln))
         sys.stdout.write(line)
         ln += 1
 
@@ -73,15 +74,15 @@ def printSplit(expected, got, splitPt):
             sys.stdout.write(expsp[iExp])
             for i in xrange(len(expsp[iExp]), longestLine):
                 sys.stdout.write(" ")
-            pink(" |")
+            pink("  |")
         else:
             for i in xrange(0, longestLine):
                 sys.stdout.write(" ")
-            pink("-|")
+            pink("--|")
         if iGot < len(gotsp):
-            print "", gotsp[iGot]
+            print " ", gotsp[iGot]
         else:
-            pink("-\n")
+            pink("--\n")
         iExp += 1
         iGot += 1
 
@@ -157,7 +158,7 @@ def runModule(module):
     else:
         clearLine()
         pink("|")
-        green("\tPassed all cases")
+        green("\tPassed all {} cases".format(totalIn))
     print ""
 
 # Runs every test case in alphabetical order {module}->{test-name}
@@ -166,7 +167,7 @@ def runTests():
     for module in modules:
         runModule(module)
     if testNo != totalPassed:
-        blue("\nPassed:\t{}\nFailed:\t{}\nTotal:\t{}\n".format(totalPassed, testNo-totalPassed, testNo))
+        blue("\nPassed:\t{}\nFailed:\t{}\nTotal:\t{}\n".format(totalPassed, testNo-totalPassed, testNo+1))
         blue("Run 'python main.py [binary] [test-no]' to see detailed output about a specific test you failed\n")
     else:
         blue("You pass everything I can throw at it.\n")
@@ -205,3 +206,6 @@ else:
     printHelp()
 
 print ""
+
+if totalPassed != testNo + 1:
+    sys.exit(1)

@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+var a = {}
+var b = {dd: "hi there"}
+var c = a + b
+var d = b - a
+var e = a * b * c
+var f = a / 5
+var g = 5 / b
+</script>
