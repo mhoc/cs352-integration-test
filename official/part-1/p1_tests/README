@@ -1,0 +1,72 @@
+Requirements:
+
+10 1) Arbitrary whitespace
+10 2) Quoted string.
+     ->No line breaks : don't test, forbidden by spec
+     ->next quote ends string, no escapes etc
+
+ 5  3) Begin
+ 5  4) End
+    5) Semicolons:
+ 5      ->optional at end of line
+ 5      ->required between multiple statements on same line
+
+ 2   6)Document write statements
+     7)Parameter list: 
+        -> 0 or more
+ 3	  		-> 0
+ 5				-> 1
+ 5				-> 2
+ 5				-> N
+ 4      -> quoted string
+ 4      -> arithmetic expression
+ 2      -> arbitrary combination of quoted string and arithmetic
+
+     8)Arithmetic:
+ 5      -> + - * /
+ 5      -> Parenthesis
+
+     9)Assignment statements
+ 5      -> id = string
+ 5      -> id = arithmetic
+
+    10) declarations
+ 5      -> var id
+ 5      -> var id = expr
+
+----
+100
+
+Release tests for 3, 4 along with a simple harness, just to 
+make sure they are compatible with out testing regime.
+
+----
+Test cases:
+
+Note: these are regressive and build on top of eachother as they go.
+
+test  requirement   points   notes
+1     4             3        no end
+2     3             3        no begin
+3     3,4           4        begin and end
+4     1             10       whitespace.  Note: also tested throughout
+5     10.1          3        positive test
+6     10.1          2        Negative test: invalid ID.  starts w/ a number
+7     9.1           5        Positive test only, quoted strings later
+8     9.2           5        Positive test only, arith later
+9     2             5        positive test: incudes single quotes
+10    2.1           5        invalid: extra quote
+11    6,7.1         4        valid
+12    6             1        invalid
+13    7.2, 7.5      7        (3 + 4) valid write: string
+14    7.2, 7.6      6        (2 + 4) valid write: arith
+15    7.3           5        valid: all 4 argument combinations
+16    7.4, 7.7      7        valid: wacky combos
+17    8.1           3        valid
+18    8.1           2        invalid operation
+19    8.2           3        valid: includes nesting
+20    8.2           2        invalid: unmatched
+21   10.2           5        valid only
+22    5.1           5        declaration, declare and assign, and expressions with semi
+															colons
+23    5.2           5        test22 but all on one line

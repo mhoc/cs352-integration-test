@@ -1,0 +1,20 @@
+<script type="text/JavaScript">
+
+var foo = 8
+foo = 8 + 9
+foo = 8 - 9
+foo = 8 * 9
+foo = 9 / 10
+
+var bar
+foo = bar + foo
+foo = bar + 5
+foo = bar - foo
+bar = 9 - foo
+bar = foo * 9
+foo = bar * foo
+bar = 10 / foo
+bar = bar / foo
+
+
+</script>

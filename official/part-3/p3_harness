@@ -1,0 +1,161 @@
+#!/usr/bin/perl -w
+
+use POSIX;
+use autodie;
+
+sub grade {
+	$test = $_[0];
+	my $root = "";
+	if($test =~ m;(./.*/.*/.*/\d+).js;){
+		$root = $1;
+	}
+	else {
+		#print "invalid test file\n";
+		#print "$test\n";
+		exit;
+	}
+	$out_file = $root.".out";
+	$err_file = $root.".err";
+
+#print "Grading: " . $test . ": ";
+	$cmd = "timeout 1 ./parser ".$test." 1>tmp.out 2>tmp.err";
+
+	#sigh, have to deal with non terminating programs ...
+	system($cmd);
+	if($? >> 8 == 124){
+		#print "fail - timeout\n";
+		return 0;
+	}
+#get student output
+	open OUT, '<', "tmp.out" or die "Can't open $out_file";
+	$out = join("", <OUT>);
+	close OUT;
+
+	open ERR, '<', "tmp.err" or die "Can't open $err_file";
+	$err = join("", <ERR>);
+	close ERR;
+
+#Get expected out, err.  Remove last character (the artificial \n from vim)
+	if(-f $out_file){
+		open OUT, '<', $out_file;
+		$expected_out = join("", <OUT>);
+		$expected_out = substr($expected_out, 0, -1);
+		close OUT;
+	}
+	else{
+		$expected_out = "";
+	}
+	if(-f $err_file){
+	  open ERR, '<', $err_file;
+		$expected_err = join("", <ERR>);
+		$expected_err = substr($expected_err, 0, -1);
+		close ERR;
+	}
+	else{
+		$expected_err = "";
+	}
+#compare 
+	if($out eq $expected_out && $err eq $expected_err){
+#print "pass\n";
+		return 1;
+	}
+	elsif($expected_err =~m/syntax error/ && $err =~ m/syntax error/){
+#print "pass\n";
+		return 1;
+	}
+	else {
+#print "fail\n";
+#print "Expected out <$expected_out>\nOut: <$out>\n";
+#print "Expected err <$expected_err>\nErr: <$err>\n";
+		return 0;
+	}
+}
+
+sub GradeDir {
+	opendir(DIR, $_[0]);
+	my @names = readdir(DIR);
+	closedir(DIR);
+
+	my $local_score = 0;
+
+	my $root = $_[0];
+
+	foreach my $name (@names){
+		next if ($name eq ".");
+		next if ($name eq "..");
+	
+		$cur = "";
+		$cur = $root . "/" . $name;
+##print "Current canidate: $cur\n";
+		if(-d $cur){
+##print "Found: $cur\n";
+			$local_score += GradeDir($cur);
+			next;
+		}
+		#if it is a file and ends with .js
+		if(-f $cur && $cur =~ m;.*.js;){  
+#			#print "about to grade\n";
+			$local_score += grade($cur);
+			next;
+		}
+	}
+	return $local_score;
+}
+
+#running score starts at 0
+$sum = 0;
+
+#Make the students code, checking for conflicts
+$cmd = "make 1>tmp.txt 2>&1";
+system($cmd);
+open FILE, '<', "tmp.txt";
+$result = join("", <FILE>);
+if(index($result, 'conflict') != -1){
+	#print "Code contains grammar conflicts!\n";
+	$sum -= 10;
+}
+close FILE;
+
+opendir(DIR, "./tests");
+@names = readdir(DIR);
+closedir(DIR);
+
+my $local_score = 0;
+
+foreach my $name (@names){
+	if($name =~ m/general/){
+		$tmp = `find ./tests/$name -regex .*\.js -print | wc -l`;
+		$score = GradeDir("./tests/".$name);
+		#print "General: $score of $tmp\n";
+		$sum += ($score/$tmp) * .8 * .1;
+	}
+	elsif ($name =~ m/output/){
+		$tmp = `find ./tests/$name -regex .*\.js -print | wc -l`;
+		$score = GradeDir("./tests/$name");
+		#print "Output: $score of $tmp\n";
+		$sum += ($score/$tmp) * .8 * .35;
+	}
+	if ($name =~ m/type_rules/){
+		$tmp = `find ./tests/$name -regex .*\.js -print | wc -l`;
+		$score = GradeDir("./tests/$name");
+		if ($score <= $tmp - 2) {
+			$score += 2;  #confusion over undeclared_err/2.js and 3.js
+		}
+		#print ("Type_Rules: $score of $tmp\n");
+		$sum += ($score/$tmp) * .8 * .35;
+	}
+	elsif ($name =~ m/syntax/){
+		$tmp = `find ./tests/$name -regex .*\.js -print | wc -l`;
+		$score = GradeDir("./tests/".$name);
+		#print "Syntax: $score of $tmp\n";
+		$sum += ($score/$tmp) * .8 * .2;
+	}
+}
+
+if($sum < 0){
+	$sum = 0;
+}
+
+##print "\n\nTotal Score: ".$sum."\n";
+
+print $sum  . "\n\n";

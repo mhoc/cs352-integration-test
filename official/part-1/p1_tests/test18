@@ -1,0 +1,7 @@
+<script type="text/JavaScript">
+
+var foo
+
+foo = 8 % 9 ^ 7
+
+</script>

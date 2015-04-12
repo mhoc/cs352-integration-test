@@ -1,0 +1,9 @@
+Line 4, type violation
+Line 7, condition unknown
+Line 13, condition unknown
+Line 24, z has no value
+Line 27, z[9] has no value
+Line 29, z.field has no value
+Line 35, z[4] has no value
+Line 35, z[10] has no value
+

@@ -1,0 +1,10 @@
+<script type="text/JavaScript">
+
+var foo = (8)
+var bar = (bar)
+var f = (8 + bar) * 9
+var f2 = (a * bar) + (foo - 9) 
+var f3 = (a+(bar - 9 * (bar + 2) - 8 ) / foo + bar) - 8
+var f4 = "the quick brown fox jumped over the lazy dog"
+
+</script>

@@ -1,0 +1,10 @@
+<script type="text/JavaScript">
+
+var x
+
+document.write(x)
+document.write(10)
+document.write(10 + 3)
+document.write((10 + 3) - 5)
+
+</script>
