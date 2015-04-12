@@ -84,12 +84,8 @@ so I filled it in myself.
 * Part 1 Official: Test10 is provided in the targz and under `official/` but
 is withdrawn from the testrunner as per piazza post 99
 
-# Final Notes
+# Final Note
 
 Getting 100% on these test cases does not mean you will get 100% on the
 project. Failing some of these test cases does not mean you wont get
 100% on the project.
-
-There are no fundamental "conflicts" between test cases (IE: your parser
-passes test 1 and fails 2, you fix it to pass 2 and now it fails 1). My
-binary gets 100% across all tests and modules, which means its possible.
