@@ -25,7 +25,7 @@ tests = []
 
 def stripEndNl(st):
     if len(st) > 0 and st[len(st)-1] == '\n':
-        return st[:len(st)-1]
+        return stripEndNl(st[:len(st)-1])
     return st
 
 # ==================
@@ -148,7 +148,7 @@ def runModule(module):
     pink(module.split("/")[1].replace("-", " ").title() + "\n|\tPassed 0 of 0 tests")
     cases = [ join(module, f) for f in listdir(module) if isfile(join(module, f)) and not ".outp" in f and not ".error" in f]
     for case in cases:
-        time.sleep(0.01)
+        time.sleep(0.01) # OK FINE, MAYBE I WANT YOU TO SEE MY AWESOME TEXT AUTO-UPDATING, IT TOOK A LOT OF WORK OK?!
         totalIn += 1
         if runTest(case):
             passedIn += 1
@@ -176,7 +176,7 @@ def runTests():
     for module in modules:
         runModule(module)
     if testNo != totalPassed:
-        blue("\nPassed:\t{}\nFailed:\t{}\nTotal:\t{}\n".format(totalPassed, testNo-totalPassed, testNo+1))
+        blue("\nPassed:\t{}\nFailed:\t{}\nTotal:\t{}\n".format(totalPassed, testNo-totalPassed+1, testNo+1))
         blue("Run 'python main.py [binary] [test-no]' to see detailed output about a specific test you failed\n")
     else:
         blue("You pass everything I can throw at it.\n")
