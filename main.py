@@ -34,21 +34,26 @@ def stripEndNl(st):
 
 def green(st):
     sys.stdout.write('\033[92m' + st + '\033[0m')
+    sys.stdout.flush()
 
 def red(st):
     sys.stdout.write('\033[91m' + st + '\033[0m')
+    sys.stdout.flush()
 
 def pink(st):
     sys.stdout.write('\033[95m' + st + '\033[0m')
+    sys.stdout.flush()
 
 def blue(st):
     sys.stdout.write('\033[94m' + st + '\033[0m')
+    sys.stdout.flush()
 
 def clearLine():
     sys.stdout.write('\r')
     for i in xrange(0, 100):
         sys.stdout.write(' ')
     sys.stdout.write('\r')
+    sys.stdout.flush()
 
 def printHeader(header):
     pink("\033[4m\n=== " + header + " \033[0m")
@@ -63,6 +68,7 @@ def printTestCase(test):
         pink("{:0>2d}| ".format(ln))
         sys.stdout.write(line)
         ln += 1
+    sys.stdout.flush()
 
 def printSplit(expected, got, splitPt):
     expsp = expected.split("\n")
@@ -85,6 +91,7 @@ def printSplit(expected, got, splitPt):
             pink("--\n")
         iExp += 1
         iGot += 1
+    sys.stdout.flush()
 
 def printOutErr(expOut, gotOut, expErr, gotErr):
     m = -1
@@ -138,9 +145,10 @@ def runTest(testfile, verbose=False):
 def runModule(module):
     failed = []
     passedIn, totalIn = 0, 0
-    pink(module.split("/")[1].replace("-", " ").title() + "\n\tPassed 0 of 0 tests")
+    pink(module.split("/")[1].replace("-", " ").title() + "\n|\tPassed 0 of 0 tests")
     cases = [ join(module, f) for f in listdir(module) if isfile(join(module, f)) and not ".outp" in f and not ".error" in f]
     for case in cases:
+        time.sleep(0.01)
         totalIn += 1
         if runTest(case):
             passedIn += 1
@@ -148,13 +156,14 @@ def runModule(module):
             failed.append(testNo)
         clearLine()
         pink("|")
-        sys.stdout.write("\tPassed {} of {} tests".format(passedIn, totalIn))
+        red("\tPassed {} of {} tests".format(passedIn, totalIn))
+        sys.stdout.flush()
     if len(failed) > 0:
         print ""
         pink("|")
-        red("\tFailed ")
+        red("\tFailed test cases   ")
         for case in failed:
-            red(str(case) + " ")
+            red('\033[1m' + str(case) + "\033[0m ")
     else:
         clearLine()
         pink("|")

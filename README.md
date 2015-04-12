@@ -7,12 +7,7 @@ lab handouts, instructor piazza notes, other students' test cases (thanks
 Logan!) and elsewhere.
 
 I am convinced that this is the single most advanced test runner and most
-comprehensive test suite available for the parser, and it is updated every day.
-
-**Note**: The one thing none of these test cases check for is that all of your
-error output is done on stderr. These combine stderr and stdout into one
-output as if a user were actually using your program. Run Logan's test cases
-(inside this repository under `logans/`) to check for this at least once.
+comprehensive test suite available for the parser, and it is updated every day?
 
 # Add a test case? See an error?
 
@@ -21,54 +16,55 @@ File an issue on the right, open a pull request, or contact me otherwise.
 
 # Easy Setup
 
-These commands download, run, and clean the test files in one swoop...
+You can add the following commands to your makefile as you wish to download
+the latest files, run them, and clean up in one swoop.
 
 ```
 git clone http://github.com/mhoc/cs352-test.git
-cd cs352-integration-test && go run main.go ../parser
+cd cs352-test && python main.py ../parser
 rm -rf cs352-test
 ```
 
-Or you can set it up to not have to download each time...
-
-```
-git clone http://github.com/mhoc/cs352-test.git test
-```
-
-And add to your makefile...
-
-```
-test:
-  cd test && git pull && go run main.go ../parser
-```
-
-Up to you!
+Or you can do a more complicated setup so you dont have to download it each
+time. Up to you.
 
 # Run Options
 
-`go run main.go path/to/binary`
+`python main.py [path-to-binary]`
 
-`go run main.go -exit-on-fail path/to/binary`
-This will cause the test suite to exit when it encounters its first failure.
-You can use this to decrease the output you need to read.
+Runs all of the tests and presents concise error output for which ones you've
+failed.
+
+`python main.py [path-to-binary] [test-number]`
+
+Runs a single test case and presents highly detailed output about what the
+test case looks like, your output, and the expected output.
 
 # Test Files
 
-The testfiles are located in multiple subfolders under the folder `testfiles/`.
-Each subfolder is a type of feature of the language and contains both pass
-and failure tests which test for proper output from the compiler.
+The testfiles are located in multiple subfolders under the folder `cases/`.
 
-Each test file attempts to test one single feature. That being said, there are
-some core features which are impossible to avoid in most tests. These features
-are tested in the `testfiles/core/` module and are tested first. They include
-things like basic document structure (header/ending tags) and
-very basic document.write().
+Each subfolder is viewed as a module and attempts to test one feature or
+contains tests from one source. For example, one module might be to just
+test array features, whereas another might be the test cases provided
+by the class TAs for grading after they are done grading. I've got them
+all.
 
-If a testfile has output, it is contained in a similarly named file with a
-`.outp` extension.
+There *will* be a lot of testing overlap between modules and cases. Its
+inevitable.
 
-# Output
+# Test Case Comments
 
-In addition to pass/fail, you will receive the time it took to complete the
-test in microseconds. If you fail a test, you will receive a printout of
-the expected output, your output, and the test case itself. Super handy.
+* Logans Test 125 from project 3 is confirmed to be invalid due to the usage
+of `!(x - y)` on line 21. It is included as a test here but I have modified
+the expected output to be empty and expected error to be a `syntax error`
+
+# Final Notes
+
+Getting 100% on these test cases does not mean you will get 100% on the
+project. Failing some of these test cases does not mean you wont get
+100% on the project.
+
+There are no fundamental "conflicts" between test cases (IE: your parser
+passes test 1 and fails 2, you fix it to pass 2 and now it fails 1). My
+binary gets 100% across all tests and modules, which means its possible.
