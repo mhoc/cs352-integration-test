@@ -16,7 +16,6 @@ comprehensive test suite available for the parser, and it is updated every day?
 # Add a test case? See an error?
 
 File an issue on the right, open a pull request, or contact me otherwise.
-(mike@hockerman.com)
 
 # Easy Setup
 
