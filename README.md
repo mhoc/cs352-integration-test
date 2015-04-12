@@ -11,7 +11,11 @@ comprehensive test suite available for the parser, and it is updated every day?
 
 ![Running All The Tests](http://i.imgur.com/nGcIhps.png)
 
+Yes, you're reading that right. At the time of writing, this test runner has over 400 test cases which cover all functionality up to and not including Part 4. Part 4 functionality will be added within the week. 
+
 ![Seeing Output For A Test That Failed](http://i.imgur.com/QTT9qtQ.png)
+
+Expected output is on the left and the output from your parser is on the right. Output is correctly separated by stdout and stderr. 
 
 # Add a test case? See an error?
 
