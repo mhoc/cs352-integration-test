@@ -1,0 +1,20 @@
+<script type="text/JavaScript">
+
+var a
+
+document.write(a, 5)
+document.write(5, a)
+document.write(15, 27)
+
+document.write("hello", "there")
+
+document.write(a, "bye")
+document.write(5+6*3-2, "bye")
+
+document.write("string", 1337)
+document.write("foo", a)
+
+document.write("hello", 345+245, "foo", "bar", (5), 6*7, "balh");
+document.write(a, 5*6, "foo", "bar", "one flew over the chicken's coop");
+
+</script>

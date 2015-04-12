@@ -53,16 +53,29 @@ all.
 There *will* be a lot of testing overlap between modules and cases. Its
 inevitable.
 
+Also note that for the official test cases, I updated them to comply with
+the changing project specifications such that you should get 100% with your
+final build in Project 4, and (most likely) the binary you turned in for,
+say, part 1 would not pass the part-1-official tests in this repository.
+
+Completely unmodified copies of the official test runner and cases is provided
+for your convenience under `official/`. These is not used in the test runner
+in any way.
+
 # Test Case Comments
 
 * Logans Test 125 from project 3 is confirmed to be invalid due to the usage
 of `!(x - y)` on line 21. It is included as a test here but I have modified
 the expected output to be empty and expected error to be a `syntax error`
 
-* In Part 2 Official, I removed test labeled "19.js19.js" as it appears to
+* Part 2 Official: I removed test labeled "19.js19.js" as it appears to
 be a repeat of 18.js (or, p2-ta-18 on my runner)
 
-* 
+* Part 1 Official: Provided test cases had no expected output
+so I filled it in myself.
+
+* Part 1 Official: Test10 is provided in the targz and under `official/` but
+is withdrawn from the testrunner as per piazza post 99
 
 # Final Notes
 

@@ -1,0 +1,15 @@
+<script type="text/JavaScript">
+
+var blah
+var Blah
+var blAh
+
+var fo8bar
+var fooBar8
+
+blAh = 9 + 9
+Blah = 10 - 8
+fo8bar = 9 * 8
+blah = 100 - 100
+
+</script>
