@@ -6,12 +6,9 @@ parser. These tests are compiled from a variety of sources, including the
 lab handouts, instructor piazza notes, other students' test cases (thanks
 Logan!) and elsewhere.
 
-I am convinced that this is the single most advanced test runner and most
-comprehensive test suite available for the parser, and it is updated every day?
-
 ![Running All The Tests](http://zippy.gfycat.com/OddballNaughtyHydra.gif)
 
-Yes, you're reading that right. At the time of writing, this test runner has over 400 test cases which cover all functionality up to and not including Part 4. Part 4 functionality will be added within the week. 
+At the time of writing, this test runner has over 400 test cases which cover all functionality up to and not including Part 4. Part 4 functionality will be added within the week. 
 
 ![Seeing Output For A Test That Failed](http://i.imgur.com/QTT9qtQ.png)
 
@@ -21,7 +18,7 @@ Expected output is on the left and the output from your parser is on the right. 
 
 File an issue on the right, open a pull request, or contact me otherwise.
 
-# Easy Setup
+# Setup
 
 You can add the following commands to your makefile as you wish to download
 the latest files, run them, and clean up in one swoop.
@@ -47,27 +44,9 @@ failed.
 Runs a single test case and presents highly detailed output about what the
 test case looks like, your output, and the expected output.
 
-# Test Files
+# Known "Bugs"
 
-The testfiles are located in multiple subfolders under the folder `cases/`.
-
-Each subfolder is viewed as a module and attempts to test one feature or
-contains tests from one source. For example, one module might be to just
-test array features, whereas another might be the test cases provided
-by the class TAs for grading after they are done grading. I've got them
-all.
-
-There *will* be a lot of testing overlap between modules and cases. Its
-inevitable.
-
-Also note that for the official test cases, I updated them to comply with
-the changing project specifications such that you should get 100% with your
-final build in Project 4, and (most likely) the binary you turned in for,
-say, part 1 would not pass the part-1-official tests in this repository.
-
-Completely unmodified copies of the official test runner and cases is provided
-for your convenience under `official/`. These is not used in the test runner
-in any way.
+* The runner employes a rudimentary form of infinite loop detection, though which if any test takes longer than 2 seconds, it assumes that its an infinite loop and you fail the test. Normally these tests should never take more than 5 milliseconds, so if you hit one of these bugs on a test you know should be passing, you can raise the timeout in the main.py file and also re-evaluate some core design patterns in your parser because jesus man, 2 seconds?
 
 # Test Case Comments
 
