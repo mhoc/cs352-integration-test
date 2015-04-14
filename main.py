@@ -158,6 +158,7 @@ def runTest(testfile, verbose=False):
     t = threading.Thread(target=infiniteLoopTestKiller, args=(process, ))
     t.start()
     process.wait()
+    t._Thread__stop()
     outFile.seek(0)
     errFile.seek(0)
     stdout, stderr = stripEndNl(outFile.read()), stripEndNl(errFile.read())
