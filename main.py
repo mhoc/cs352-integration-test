@@ -7,6 +7,7 @@ import os
 from os import listdir
 from os.path import isdir, isfile, join
 import time
+import threading
 from subprocess import Popen, PIPE
 import sys
 
@@ -140,12 +141,19 @@ def printOutErr(expOut, gotOut, expErr, gotErr):
 # Core Functionality
 # ==================
 
+def infiniteLoopTestKiller(process):
+    time.sleep(2)
+    if process.poll() is None:
+        process.kill()
+
 # Runs a single test. Returns true if it passes, otherwise false.
 # Printing can be enabled by passing in true for verbosity
 def runTest(testfile, verbose=False):
     global testNo, totalPassed
     testNo += 1
     process = Popen([binaryLocation, testfile], stdout=PIPE, stderr=PIPE)
+    t = threading.Thread(target=infiniteLoopTestKiller, args=(process, ))
+    t.start()
     stdout, stderr = process.communicate()
     stdout, stderr = stripEndNl(stdout), stripEndNl(stderr)
     expectedOut, expectedError = "", ""
