@@ -1,5 +1,5 @@
 
-# MSP Test Suite
+# Miniscript Test Suite
 
 This is a test suite for running a series of tests designed for the miniscript
 parser. These tests are compiled from a variety of sources, including the
