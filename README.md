@@ -9,10 +9,17 @@ Logan!) and elsewhere.
 I am convinced that this is the single most advanced test runner and most
 comprehensive test suite available for the parser, and it is updated every day?
 
+![Running All The Tests](http://zippy.gfycat.com/OddballNaughtyHydra.gif)
+
+Yes, you're reading that right. At the time of writing, this test runner has over 400 test cases which cover all functionality up to and not including Part 4. Part 4 functionality will be added within the week. 
+
+![Seeing Output For A Test That Failed](http://i.imgur.com/QTT9qtQ.png)
+
+Expected output is on the left and the output from your parser is on the right. Output is correctly separated by stdout and stderr. 
+
 # Add a test case? See an error?
 
 File an issue on the right, open a pull request, or contact me otherwise.
-(mike@hockerman.com)
 
 # Easy Setup
 
@@ -77,12 +84,8 @@ so I filled it in myself.
 * Part 1 Official: Test10 is provided in the targz and under `official/` but
 is withdrawn from the testrunner as per piazza post 99
 
-# Final Notes
+# Final Note
 
 Getting 100% on these test cases does not mean you will get 100% on the
 project. Failing some of these test cases does not mean you wont get
 100% on the project.
-
-There are no fundamental "conflicts" between test cases (IE: your parser
-passes test 1 and fails 2, you fix it to pass 2 and now it fails 1). My
-binary gets 100% across all tests and modules, which means its possible.
