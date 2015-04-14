@@ -144,6 +144,8 @@ def printOutErr(expOut, gotOut, expErr, gotErr):
 def infiniteLoopTestKiller(process):
     time.sleep(2)
     if process.poll() is None:
+        outFile = open("out.temp", "w")
+        outFile.write("The test runner detected an infinite loop in your code\n")
         process.kill()
 
 # Runs a single test. Returns true if it passes, otherwise false.
@@ -151,11 +153,16 @@ def infiniteLoopTestKiller(process):
 def runTest(testfile, verbose=False):
     global testNo, totalPassed
     testNo += 1
-    process = Popen([binaryLocation, testfile], stdout=PIPE, stderr=PIPE)
+    outFile, errFile = open("out.temp", "w+"), open("error.temp", "w+")
+    process = Popen([binaryLocation, testfile], stdout=outFile, stderr=errFile)
     t = threading.Thread(target=infiniteLoopTestKiller, args=(process, ))
     t.start()
-    stdout, stderr = process.communicate()
-    stdout, stderr = stripEndNl(stdout), stripEndNl(stderr)
+    process.wait()
+    outFile.seek(0)
+    errFile.seek(0)
+    stdout, stderr = stripEndNl(outFile.read()), stripEndNl(errFile.read())
+    os.remove("out.temp")
+    os.remove("error.temp")
     expectedOut, expectedError = "", ""
     passed = True
     if verbose:
