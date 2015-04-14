@@ -1,0 +1,10 @@
+<script type="text/JavaScript">
+var lb = "<br />"
+while (3 == 1) {
+    if (3 > "str") {
+        document.write("fail", lb)
+    }
+    document.write("fail", lb)
+}
+document.write("pass", lb)
+</script>

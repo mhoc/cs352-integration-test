@@ -1,0 +1,11 @@
+<script type="text/JavaScript">
+var lb = "<br />"
+if (3 > 1) {
+    if (3 > "str" == false) {
+        document.write("fail", lb)
+    }
+    document.write("pass", lb)
+} else {
+    document.write("fail", lb)
+}
+</script>

@@ -1,0 +1,15 @@
+<script type="text/JavaScript">
+var lb = "<br />"
+var entered = false
+while (3 > 1) {
+    if (3 > "str") {
+        entered = true
+        document.write("fail", lb)
+    }
+    document.write("pass", lb)
+    break
+}
+if (entered) {
+    document.write("fail", lb)
+}
+</script>

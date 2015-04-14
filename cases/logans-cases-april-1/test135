@@ -1,0 +1,5 @@
+<script type="text/JavaScript">
+var lb = "<br />"
+var x = 5;
+document.write(x.x, lb)
+</script>
