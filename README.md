@@ -8,11 +8,11 @@ Logan!) and elsewhere.
 
 ![Running All The Tests](http://zippy.gfycat.com/OddballNaughtyHydra.gif)
 
-At the time of writing, this test runner has over 400 test cases which cover all functionality up to and not including Part 4. Part 4 functionality will be added within the week. 
+At the time of writing, this test runner has over 400 test cases which cover all functionality up to and not including Part 4. Part 4 functionality will be added within the week.
 
 ![Seeing Output For A Test That Failed](http://i.imgur.com/QTT9qtQ.png)
 
-Expected output is on the left and the output from your parser is on the right. Output is correctly separated by stdout and stderr. 
+Expected output is on the left and the output from your parser is on the right. Output is correctly separated by stdout and stderr.
 
 # Add a test case? See an error?
 
@@ -62,6 +62,11 @@ so I filled it in myself.
 
 * Part 1 Official: Test10 is provided in the targz and under `official/` but
 is withdrawn from the testrunner as per piazza post 99
+
+* Made some minor modifications to error output on Logan's (part 2) test cases
+to account for the change in the part 3 handout:
+
+> A read of an undeclared variable prior to any write to that variable returns an undefined type, and is considered a value error.
 
 # Final Note
 

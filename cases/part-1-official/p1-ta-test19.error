@@ -1,5 +1,5 @@
 Line 3, foo undeclared
-Line 4, type violation
-Line 5, type violation
-Line 6, type violation
-Line 7, type violation
+Line 4, bar has no value
+Line 5, bar has no value
+Line 6, a has no value
+Line 7, a has no value

@@ -220,7 +220,7 @@ def runTests():
     modules = [ join("cases", f) for f in listdir("cases") if isdir(join("cases",f)) ]
     for module in modules:
         runModule(module)
-    if testNo != totalPassed:
+    if testNo <= totalPassed:
         blue("\nPassed:\t{}\nFailed:\t{}\nTotal:\t{}\n".format(totalPassed, testNo-totalPassed+1, testNo+1))
         blue("Run 'python main.py [binary] [test-no]' to see detailed output about a specific test you failed\n")
     else:
