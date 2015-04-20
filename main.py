@@ -125,7 +125,7 @@ def printSplit(expected, got, splitPt):
     sys.stdout.flush()
 
 def printOutErr(expOut, gotOut, expErr, gotErr):
-    m = -1
+    m = 23
     for line in expOut.split("\n"):
         if len(line) > m:
             m = len(line)
