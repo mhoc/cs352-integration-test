@@ -185,9 +185,9 @@ def runTest(testfile, verbose=False):
     if verbose:
         printOutErr(expectedOut, stdout, expectedError, stderr)
     if verbose and passed:
-        green("\n" + u"\u2713" + " Test Passed\n")
+        green("\n" + "Test Passed\n")
     elif verbose and not passed:
-        red("\n" + u"\u2717" + " Test Failed\n")
+        red("\n" + "Test Failed\n")
     if passed:
         totalPassed += 1
     return passed
