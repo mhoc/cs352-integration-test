@@ -1,4 +1,8 @@
 
+# TURN BACK ALL YE WHO ENTER HERE
+# DONT TRY TO UNDERSTAND HOW IT WORKS, MY GOAL WAS TO GET THE FEWEST LINES
+# POSSIBLE IN A SINGLE FILE, NOT FOR IT TO BE READABLE
+
 # =======
 # Imports
 # =======
@@ -17,6 +21,7 @@ import sys
 
 testNo = -1
 totalPassed = 0
+timeTaken = 0
 binaryLocation = ""
 tests = []
 
@@ -50,12 +55,6 @@ def getTerminalSize():
             pass
     if not cr:
         cr = (env.get('LINES', 25), env.get('COLUMNS', 80))
-
-        ### Use get(key[, default]) instead of a try/catch
-        #try:
-        #    cr = (env['LINES'], env['COLUMNS'])
-        #except:
-        #    cr = (25, 80)
     return int(cr[1]), int(cr[0])
 
 # ==================
@@ -76,6 +75,10 @@ def pink(st):
 
 def blue(st):
     sys.stdout.write('\033[94m' + st + '\033[0m')
+    sys.stdout.flush()
+
+def purple(st):
+    sys.stdout.write('\033[1;35m' + st + '\033[0m')
     sys.stdout.flush()
 
 def clearLine():
@@ -151,13 +154,15 @@ def infiniteLoopTestKiller(process):
 # Runs a single test. Returns true if it passes, otherwise false.
 # Printing can be enabled by passing in true for verbosity
 def runTest(testfile, verbose=False):
-    global testNo, totalPassed
+    global testNo, totalPassed, timeTaken
     testNo += 1
     outFile, errFile = open("out.temp", "w+"), open("error.temp", "w+")
+    startTime = time.time() * 1000
     process = Popen([binaryLocation, testfile], stdout=outFile, stderr=errFile)
     t = threading.Thread(target=infiniteLoopTestKiller, args=(process, ))
     t.start()
     process.wait()
+    timeTaken += time.time()*1000 - startTime
     t._Thread__stop()
     outFile.seek(0)
     errFile.seek(0)
@@ -220,11 +225,17 @@ def runTests():
     modules = [ join("cases", f) for f in listdir("cases") if isdir(join("cases",f)) ]
     for module in modules:
         runModule(module)
-    if (testNo+1) != totalPassed:
-        blue("\nPassed:\t{}\nFailed:\t{}\nTotal:\t{}\n".format(totalPassed, testNo-totalPassed+1, testNo+1))
-        blue("Run 'python main.py [binary] [test-no]' to see detailed output about a specific test you failed\n")
-    else:
-        blue("\nYou pass everything I can throw at it.\n")
+    blue("\nPassed:\t")
+    purple("{} ({:.0f}%)\n".format(totalPassed, (totalPassed / (testNo+1))*100))
+    blue("Failed:\t")
+    purple("{}\n".format(testNo-totalPassed+1))
+    blue("Total:\t")
+    purple("{}\n".format(testNo+1))
+    blue("Average time per test: ")
+    purple("{:.2f}ms\n".format(timeTaken / (testNo+1)))
+    blue("Run ")
+    purple("python main.py [binary] [test-no] ")
+    blue("to see detailed output about a specific test you failed\n")
 
 # This is used during specific test case running so we know which numbered test case
 # the user is trying to access. Otherwise we iterate by module, but it ends up being
