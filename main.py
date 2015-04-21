@@ -224,7 +224,7 @@ def runTests():
         blue("\nPassed:\t{}\nFailed:\t{}\nTotal:\t{}\n".format(totalPassed, testNo-totalPassed+1, testNo+1))
         blue("Run 'python main.py [binary] [test-no]' to see detailed output about a specific test you failed\n")
     else:
-        blue("You pass everything I can throw at it.\n")
+        blue("\nYou pass everything I can throw at it.\n")
 
 # This is used during specific test case running so we know which numbered test case
 # the user is trying to access. Otherwise we iterate by module, but it ends up being
