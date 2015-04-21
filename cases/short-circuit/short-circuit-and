@@ -1,0 +1,13 @@
+<script type="text/JavaScript">
+var a = false
+if (a && b) {
+  document.write("fail")
+} else {
+  document.write("pass")
+}
+if (b && a) {
+  document.write("fail")
+} else {
+  document.write("fail")
+}
+</script>

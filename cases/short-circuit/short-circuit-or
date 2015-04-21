@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+var a = true;
+if (a || b) {
+  document.write("pass")
+}
+if (b || a) {
+  document.write("fail")
+}
+</script>
