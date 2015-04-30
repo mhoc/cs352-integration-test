@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+function f() {
+  document.write("Hello")
+}
+f()
+</script>

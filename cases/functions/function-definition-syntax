@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+function a() {
+  var a = 1;
+  document.write(a)
+}
+</script>

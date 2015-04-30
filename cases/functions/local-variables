@@ -1,0 +1,9 @@
+<script type="text/JavaScript">
+function f() {
+  var a = 12
+  document.write(a)
+}
+var a = 5
+document.write(a)
+f()
+</script>

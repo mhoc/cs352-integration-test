@@ -1,0 +1,6 @@
+<script type="text/JavaScript">
+function a() {
+  return "hi"
+}
+document.write(a())
+</script>

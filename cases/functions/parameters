@@ -1,0 +1,7 @@
+<script type="text/JavaScript">
+function a(b,c,d) {
+  var e = 1
+  document.write(b,c,d,e)
+}
+a(1,2,3)
+</script>

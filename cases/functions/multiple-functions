@@ -1,0 +1,15 @@
+<script type="text/JavaScript">
+function a() {
+  var aa = 35
+  document.write(aa)
+}
+function b() {
+  var bb = 42
+  document.write(bb)
+}
+var aa = 1
+var bb = 2
+document.write(aa, bb)
+a()
+b()
+</script>
