@@ -1,0 +1,10 @@
+<script type="text/JavaScript">
+function f(i) {
+  if (i == 0) {
+    return i
+  } else {
+    return i + f(i-1)
+  }
+}
+document.write(f(5))
+</script>
